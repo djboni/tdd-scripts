@@ -1,71 +1,9 @@
 #!/bin/bash
 # Copyright (c) 2022 Djones A. Boni - MIT License
 
-# Discard stdout
-exec >/dev/null
+source bashtest.sh
 
-f_error() {
-    # Usage: f_error "MESSAGE"
-    # echo FILE:LINE: TEST: MESSAGE
-    echo "${BASH_SOURCE[1]}:${BASH_LINENO[1]}: ${FUNCNAME[2]}:" "$@" >&2
-}
-
-f_create_file() {
-    if [ $# -eq 2 ]; then
-        FileName="$1"
-        FileContent="$2"
-    else
-        f_error "Usage: f_create_file FileName FileContent"
-        exit 1
-    fi
-
-    echo "$FileContent" >"$FileName"
-}
-
-f_delete_files() {
-    if [ $# -eq 0 ]; then
-        f_error "Usage: f_delete_files FileNames ..."
-        exit 1
-    fi
-
-    rm "$@"
-}
-
-f_create_dir() {
-    if [ $# -eq 1 ]; then
-        DirName="$1"
-    else
-        f_error "Usage: f_create_dir DirName"
-        exit 1
-    fi
-
-    mkdir "$DirName"
-}
-
-f_delete_dirs() {
-    if [ $# -eq 0 ]; then
-        f_error "Usage: f_delete_dirs DirNames ..."
-        exit 1
-    fi
-
-    rmdir "$@"
-}
-
-f_assert_file_exists() {
-    if [ $# -eq 0 ]; then
-        FileName="file.c"
-    elif [ $# -eq 1 ]; then
-        FileName="$1"
-    elif [ $# -eq 2 ]; then
-        FileName="$1"
-    else
-        f_error "Error Usage: f_delete_file [FileName]"
-    fi
-
-    if [ ! -f $FileName ]; then
-        f_error "File '$FileName' does not exist"
-    fi
-}
+f_bashtest_start
 
 f_build_mk_GivenAObjectTarget_ThenShouldCreateObjectFromCFile() {
     # Set-up
@@ -186,3 +124,5 @@ f_build_mk_GivenAnExecTarget_WhenTheInputFileHasParentReference_ThenShouldRemove
     f_delete_dirs dir
 }
 f_build_mk_GivenAnExecTarget_WhenTheInputFileHasParentReference_ThenShouldRemoveParentFromObjectPath
+
+f_bashtest_end

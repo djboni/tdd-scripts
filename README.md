@@ -65,3 +65,19 @@ int main(void)
     return 0;
 }
 ```
+
+# Merge Coverage XML Files
+
+You can merge several coverage XML files into one using the script using
+`merge_cov_xml.py`.
+
+```sh
+# C/C++ coverage
+gcovr --xml-pretty -o cov_c.xml
+
+# Python coverage
+coverage xml -o cov_py.xml
+
+# Merge coverage XML files
+python3 merge_cov_xml.py cov_*.xml > cov.xml
+```
