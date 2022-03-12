@@ -21,6 +21,22 @@ f_build_mk_GivenAObjectTarget_ThenShouldCreateObjectFromCFile() {
 }
 f_build_mk_GivenAObjectTarget_ThenShouldCreateObjectFromCFile
 
+f_build_mk_GivenAObjectTarget_ThenShouldCreateObjectFromCPPFile() {
+    # Set-up
+    Base=file
+    f_create_file $Base.cpp "int main(void) { return 0; }"
+
+    # Execution
+    make -f ../build.mk $Base.o
+
+    # Assertions
+    f_assert_file_exists $Base.o
+
+    # Tear-down
+    f_delete_files $Base.cpp $Base.o
+}
+f_build_mk_GivenAObjectTarget_ThenShouldCreateObjectFromCPPFile
+
 f_build_mk_GivenAObjectTargetWithObjDir_ThenShouldCreateObjectFromCFile() {
     # Set-up
     Base=file
@@ -38,7 +54,24 @@ f_build_mk_GivenAObjectTargetWithObjDir_ThenShouldCreateObjectFromCFile() {
 }
 f_build_mk_GivenAObjectTargetWithObjDir_ThenShouldCreateObjectFromCFile
 
-f_build_mk_GivenAnArchiveTarget_ThenShouldCreateAnArchiveFromInputFiles() {
+f_build_mk_GivenAObjectTargetWithObjDir_ThenShouldCreateObjectFromCPPFile() {
+    # Set-up
+    Base=file
+    f_create_file $Base.cpp "int main(void) { return 0; }"
+
+    # Execution
+    make -f ../build.mk obj/$Base.o OBJ_DIR=obj
+
+    # Assertion
+    f_assert_file_exists obj/$Base.o
+
+    # Tear-down
+    f_delete_files $Base.cpp obj/$Base.o
+    f_delete_dirs obj
+}
+f_build_mk_GivenAObjectTargetWithObjDir_ThenShouldCreateObjectFromCPPFile
+
+f_build_mk_GivenAnArchiveTarget_ThenShouldCreateAnArchiveFromInputCFiles() {
     # Set-up
     Base=archive
     f_create_file add.c "int add(int a, int b) { return a + b; }"
@@ -56,9 +89,29 @@ f_build_mk_GivenAnArchiveTarget_ThenShouldCreateAnArchiveFromInputFiles() {
     f_delete_files add.c sub.c obj/add.o obj/sub.o $Base.a
     f_delete_dirs obj
 }
-f_build_mk_GivenAnArchiveTarget_ThenShouldCreateAnArchiveFromInputFiles
+f_build_mk_GivenAnArchiveTarget_ThenShouldCreateAnArchiveFromInputCFiles
 
-f_build_mk_GivenAnExecTarget_ThenShouldCreateAnExecFromInputFiles() {
+f_build_mk_GivenAnArchiveTarget_ThenShouldCreateAnArchiveFromInputCPPFiles() {
+    # Set-up
+    Base=archive
+    f_create_file add.cpp "int add(int a, int b) { return a + b; }"
+    f_create_file sub.cpp "int sub(int a, int b) { return a - b; }"
+
+    # Execution
+    make -f ../build.mk $Base.a ARCHIVE=$Base.a OBJ_DIR=obj INPUTS="add.cpp sub.cpp"
+
+    # Assertions
+    f_assert_file_exists $Base.a
+    f_assert_file_exists obj/add.o
+    f_assert_file_exists obj/sub.o
+
+    # Tear-down
+    f_delete_files add.cpp sub.cpp obj/add.o obj/sub.o $Base.a
+    f_delete_dirs obj
+}
+f_build_mk_GivenAnArchiveTarget_ThenShouldCreateAnArchiveFromInputCPPFiles
+
+f_build_mk_GivenAnExecTarget_ThenShouldCreateAnExecFromInputCFiles() {
     # Set-up
     Base=exec
     f_create_file add.c "int add(int a, int b) { return a + b; }"
@@ -77,7 +130,28 @@ f_build_mk_GivenAnExecTarget_ThenShouldCreateAnExecFromInputFiles() {
     f_delete_files add.c main.c obj/add.o obj/main.o $Base.elf
     f_delete_dirs obj
 }
-f_build_mk_GivenAnExecTarget_ThenShouldCreateAnExecFromInputFiles
+f_build_mk_GivenAnExecTarget_ThenShouldCreateAnExecFromInputCFiles
+
+f_build_mk_GivenAnExecTarget_ThenShouldCreateAnExecFromInputCPPFiles() {
+    # Set-up
+    Base=exec
+    f_create_file add.cpp "int add(int a, int b) { return a + b; }"
+    f_create_file main.cpp "int main(void) { return 0; }"
+
+    # Execution
+    make -f ../build.mk $Base.elf EXEC=$Base.elf OBJ_DIR=obj \
+        INPUTS="add.cpp main.cpp"
+
+    # Assertions
+    f_assert_file_exists $Base.elf
+    f_assert_file_exists obj/add.o
+    f_assert_file_exists obj/main.o
+
+    # Tear-down
+    f_delete_files add.cpp main.cpp obj/add.o obj/main.o $Base.elf
+    f_delete_dirs obj
+}
+f_build_mk_GivenAnExecTarget_ThenShouldCreateAnExecFromInputCPPFiles
 
 f_build_mk_GivenAnExecTarget_WhenTheInputFileIsAbsolute_ThenShouldUseAbsolutePathPrependedWithObjectPath() {
     # Set-up
@@ -96,7 +170,7 @@ f_build_mk_GivenAnExecTarget_WhenTheInputFileIsAbsolute_ThenShouldUseAbsolutePat
     f_delete_files main.c obj/$PWD/main.o $Base.elf
     f_delete_dirs --parents obj/$PWD
 }
-f_build_mk_GivenAnExecTarget_WhenTheInputFileIsAbsolute_ThenShouldUseAbsolutePathPrependedWithObjectPath
+#f_build_mk_GivenAnExecTarget_WhenTheInputFileIsAbsolute_ThenShouldUseAbsolutePathPrependedWithObjectPath
 
 f_build_mk_GivenAnExecTarget_WhenTheInputFileHasParentReference_ThenShouldRemoveParentFromObjectPath() {
     # You need to provide the variable VPATH with a semicolon-separated list of
