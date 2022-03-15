@@ -170,7 +170,7 @@ f_build_mk_GivenAnExecTarget_WhenTheInputFileIsAbsolute_ThenShouldUseAbsolutePat
     f_delete_files main.c obj/$PWD/main.o $Base.elf
     f_delete_dirs --parents obj/$PWD
 }
-#f_build_mk_GivenAnExecTarget_WhenTheInputFileIsAbsolute_ThenShouldUseAbsolutePathPrependedWithObjectPath
+f_build_mk_GivenAnExecTarget_WhenTheInputFileIsAbsolute_ThenShouldUseAbsolutePathPrependedWithObjectPath
 
 f_build_mk_GivenAnExecTarget_WhenTheInputFileHasParentReference_ThenShouldRemoveParentFromObjectPath() {
     # You need to provide the variable VPATH with a semicolon-separated list of

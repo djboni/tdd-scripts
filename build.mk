@@ -10,6 +10,7 @@ CFLAGS = -g -O0 -std=c90 -pedantic -Wall -Wextra -Werror
 CXX = g++
 CXXFLAGS = -g -O0 -std=c++98 -pedantic -Wall -Wextra -Werror
 CPPFLAGS =
+LD = gcc
 LDFLAGS =
 LDLIBS =
 
@@ -32,7 +33,7 @@ $(OBJ_DIR)/%.o: %.cpp
 
 $(EXEC): $(OBJECTS)
 	@X="$@"; if [ "$${X%/*}" != "$$X" ]; then mkdir -p "$${X%/*}"; fi
-	$(CC) $^ -o $@ $(LDFLAGS) $(LDLIBS)
+	$(LD) $^ -o $@ $(LDFLAGS) $(LDLIBS)
 
 $(ARCHIVE): $(OBJECTS)
 	@X="$@"; if [ "$${X%/*}" != "$$X" ]; then mkdir -p "$${X%/*}"; fi
